@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LovelaceCardConfig, LovelaceCard } from './lovelace';
 import { HassServiceTarget } from 'home-assistant-js-websocket';
 
@@ -200,7 +199,16 @@ export interface CustomFieldCard {
 }
 
 export interface Variables {
-  [key: string]: any;
+  [key: string]: any | VariablesExtended;
+}
+
+export interface VariablesExtended {
+  value: any;
+  force_eval?: boolean;
+}
+
+export interface EvaluatedVariables {
+  [key: string]: { value?: any; loop?: boolean };
 }
 
 export interface ButtonCardEmbeddedCards {

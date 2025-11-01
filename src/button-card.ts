@@ -38,6 +38,7 @@ import {
   TooltipConfig,
   ShowToastParams,
   ToastActionConfig,
+  EvaluatedVariables,
 } from './types/types';
 import { actionHandler } from './action-handler';
 import {
@@ -173,7 +174,9 @@ class ButtonCard extends LitElement {
 
   private _stateObj: HassEntity | undefined;
 
-  private _evaledVariables: any | undefined;
+  private _evaluatedVariables: EvaluatedVariables = {};
+
+  private _pVariables?: any;
 
   private _interval?: number;
 
@@ -274,8 +277,51 @@ class ButtonCard extends LitElement {
         has: (__target, prop: string) => {
           return !!this._hass?.states?.[prop];
         },
+        ownKeys: () => {
+          if (!this._hass || !this._hass.states) return [];
+          return Object.keys(this._hass.states);
+        },
+        getOwnPropertyDescriptor: (__target, prop: string) => {
+          return {
+            value: this._hass?.states?.[prop],
+            enumerable: true,
+            configurable: true,
+          };
+        },
       },
     );
+  }
+
+  private _createVariablesProxy(variables: any): any {
+    if (!variables) return {};
+    this._evaluatedVariables = {};
+    return new Proxy(variables, {
+      get: (__target, prop: string) => {
+        if (prop in this._evaluatedVariables && 'value' in this._evaluatedVariables[prop]) {
+          return this._evaluatedVariables[prop].value;
+        } else if (prop in __target) {
+          if (this._evaluatedVariables[prop]?.loop) {
+            throw new Error(`button-card: Detected a loop while evaluating variable "${prop}"`);
+          }
+          this._evaluatedVariables[prop] = { loop: true };
+          if (typeof Reflect.get(__target, prop) === 'object') {
+            this._evaluatedVariables[prop].value = this._getTemplateOrValue(
+              this._stateObj,
+              Reflect.get(__target, prop).value,
+            );
+          } else {
+            this._evaluatedVariables[prop].value = this._getTemplateOrValue(
+              this._stateObj,
+              Reflect.get(__target, prop),
+            );
+          }
+          delete this._evaluatedVariables[prop].loop;
+          return this._evaluatedVariables[prop].value;
+        } else {
+          return undefined;
+        }
+      },
+    });
   }
 
   public disconnectedCallback(): void {
@@ -294,30 +340,20 @@ class ButtonCard extends LitElement {
     }
   }
 
-  private _evaluateVariablesSkipError(stateObj?: HassEntity | undefined) {
-    this._evaledVariables = {};
-    if (this._config?.variables) {
-      const variablesNameOrdered = Object.keys(this._config.variables).sort();
-      variablesNameOrdered.forEach((variable) => {
-        try {
-          this._evaledVariables[variable] = this._objectEvalTemplate(stateObj, this._config!.variables![variable]);
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        } catch (e) {}
-      });
-    }
-  }
-
   private _finishSetup(): void {
     if (!this._initialSetupComplete && this._doIHaveEverything) {
-      this._evaluateVariablesSkipError();
+      this._pVariables = this._createVariablesProxy(this._config?.variables);
 
       if (this._config!.entity) {
-        const entityEvaled = this._getTemplateOrValue(undefined, this._config!.entity);
-        this._config!.entity = entityEvaled;
-        this._stateObj = this._hass!.states[entityEvaled];
+        try {
+          const entityEvaled = this._getTemplateOrValue(undefined, this._config!.entity);
+          this._config!.entity = entityEvaled;
+          this._stateObj = this._hass!.states[entityEvaled];
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (e) {
+          console.error(`button-card: Could not evaluate entity template: ${this._config!.entity}`);
+        }
       }
-
-      this._evaluateVariablesSkipError(this._stateObj);
 
       if (
         !this._isActionDoingSomething(this._stateObj, this._config!.press_action) &&
@@ -394,11 +430,13 @@ class ButtonCard extends LitElement {
               this._entities.push(evaluatedEntry);
             }
             // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          } catch (e) {}
+          } catch (e) {
+            console.error(`button-card: Could not evaluate triggers_update template: ${entry}`);
+          }
         });
       } else if (typeof this._config!.triggers_update === 'string') {
         const result = this._getTemplateOrValue(this._stateObj, this._config!.triggers_update);
-        if (result && result !== 'all') {
+        if (result && result !== 'all' && result !== 'update_timer') {
           this._entities.push(result);
         } else {
           this._config!.triggers_update = result;
@@ -444,14 +482,15 @@ class ButtonCard extends LitElement {
     if (!this._config || !this._hass) return html``;
     this._stateObj = this._config!.entity ? this._hass!.states[this._config!.entity] : undefined;
     try {
-      this._evaledVariables = {};
+      this._evaluatedVariables = {};
       if (this._config?.variables) {
-        const variablesNameOrdered = Object.keys(this._config.variables).sort();
-        variablesNameOrdered.forEach((variable) => {
-          this._evaledVariables[variable] = this._objectEvalTemplate(
-            this._stateObj,
-            this._config!.variables![variable],
-          );
+        Object.keys(this._config?.variables)?.forEach((varName) => {
+          const v = this._config!.variables![varName];
+          if (typeof v === 'object' && v.force_eval) {
+            // this is to force evaluate specific variables to support "hacks"
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+            const __ = this._pVariables[varName];
+          }
         });
       }
       return this._cardHtml();
@@ -754,7 +793,7 @@ class ButtonCard extends LitElement {
         state,
         this._hass!.user,
         this._pHass,
-        this._evaledVariables,
+        this._pVariables,
         html,
         this._getTemplateHelpers(),
       );
@@ -1321,12 +1360,12 @@ class ButtonCard extends LitElement {
     const tooltipMergedConfig = { ...tooltipConfig, ...tooltipStateConfig };
 
     if (tooltipMergedConfig && tooltipMergedConfig.content) {
-      const delayMs = parseDuration(String(tooltipMergedConfig?.delay ?? '150'), 'ms', 'en');
+      const delayMs = parseDuration(String(tooltipMergedConfig?.delay ?? '150'), 'ms', 'en') as number;
       const hideDelayMs = parseDuration(
         String(tooltipMergedConfig?.hide_delay ?? tooltipMergedConfig?.delay ?? '150'),
         'ms',
         'en',
-      );
+      ) as number;
       const withoutArrow = tooltipMergedConfig?.arrow ? undefined : true;
       return html`
         <wa-tooltip
