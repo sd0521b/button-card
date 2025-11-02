@@ -1,3 +1,19 @@
+## [7.0.0-dev.2](https://github.com/custom-cards/button-card/compare/v7.0.0-dev.1...v7.0.0-dev.2) (2025-11-02)
+
+### ⚠ BREAKING CHANGES
+
+* `spin` (to make the icon/entity_picture rotate) has
+been renamed to `rotate`, please update your configurations
+
+### Features
+
+* rename `spin` to `rotate` ([#1098](https://github.com/custom-cards/button-card/issues/1098)) ([d26bae2](https://github.com/custom-cards/button-card/commit/d26bae2e37f6d086a793169ad88ae490d65c6cc7)), closes [#1081](https://github.com/custom-cards/button-card/issues/1081)
+
+### Bug Fixes
+
+* `press_action` would not work on touchscreen ([#1100](https://github.com/custom-cards/button-card/issues/1100)) ([ea71b3d](https://github.com/custom-cards/button-card/commit/ea71b3d4282ad0f5cb08928883f4ec868b480546)), closes [#1097](https://github.com/custom-cards/button-card/issues/1097)
+* **variables:** read only error in some cases ([#1101](https://github.com/custom-cards/button-card/issues/1101)) ([a316aa2](https://github.com/custom-cards/button-card/commit/a316aa2376d4bf19df0388b2889115956cc79308)), closes [#1099](https://github.com/custom-cards/button-card/issues/1099)
+
 ## [7.0.0-dev.1](https://github.com/custom-cards/button-card/compare/v6.1.0-dev.2...v7.0.0-dev.1) (2025-11-01)
 
 ### ⚠ BREAKING CHANGES
