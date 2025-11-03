@@ -1,3 +1,13 @@
+## [7.0.0-dev.3](https://github.com/custom-cards/button-card/compare/v7.0.0-dev.2...v7.0.0-dev.3) (2025-11-03)
+
+### Features
+
+* **custom_fields:** New `force_recreate: true` to recreate the nested card on each config update ([#1102](https://github.com/custom-cards/button-card/issues/1102)) ([0a85dff](https://github.com/custom-cards/button-card/commit/0a85dff18767a50e2209635a76966f5f0803f7cf)), closes [#1086](https://github.com/custom-cards/button-card/issues/1086)
+
+### Bug Fixes
+
+* **variables:** storing objects or functions in variables would fail in specific cases ([#1103](https://github.com/custom-cards/button-card/issues/1103)) ([4778c4a](https://github.com/custom-cards/button-card/commit/4778c4afa90b27e73cf9ce99b1801b2e75fb37a5))
+
 ## [7.0.0-dev.2](https://github.com/custom-cards/button-card/compare/v7.0.0-dev.1...v7.0.0-dev.2) (2025-11-02)
 
 ### ⚠ BREAKING CHANGES
