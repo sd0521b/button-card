@@ -294,7 +294,7 @@ class ButtonCard extends LitElement {
     this._evaluatedVariables = {};
     return new Proxy(variables, {
       get: (__target, prop: string) => {
-        if (prop in this._evaluatedVariables) {
+        if (prop in this._evaluatedVariables && 'value' in this._evaluatedVariables[prop]) {
           return this._evaluatedVariables[prop].value;
         } else if (prop in __target) {
           if (this._evaluatedVariables[prop]?.loop) {
