@@ -1,3 +1,10 @@
+## [7.0.0-dev.4](https://github.com/custom-cards/button-card/compare/v7.0.0-dev.3...v7.0.0-dev.4) (2025-11-06)
+
+### Bug Fixes
+
+* **actions:** Haptic support. Requires Home Assistant 2025.11 to correctly override native Home Assistant Haptics ([#1091](https://github.com/custom-cards/button-card/issues/1091)) ([6d9457d](https://github.com/custom-cards/button-card/commit/6d9457da70753fc80b229b59bd7c229117b9abc9)), closes [#956](https://github.com/custom-cards/button-card/issues/956) [#565](https://github.com/custom-cards/button-card/issues/565)
+* **variables:** variables loops would not be detected anymore ([80206ba](https://github.com/custom-cards/button-card/commit/80206ba4c8dd316871a777a5a1a41fe8e5cb2f7e))
+
 ## [7.0.0-dev.3](https://github.com/custom-cards/button-card/compare/v7.0.0-dev.2...v7.0.0-dev.3) (2025-11-03)
 
 ### Features
