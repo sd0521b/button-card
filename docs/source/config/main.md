@@ -48,7 +48,7 @@
 | `lock` | :no_entry_sign: | object | optional | See [Lock Object](./lock.md) | Displays a lock on the button |
 | `layout` | :no_entry_sign: | string | optional | See [Layout](../advanced/layout.md) | The layout of the button can be modified using this option |
 | `custom_fields` | :no_entry_sign: | object | optional | See [Custom Fields](../advanced/custom-fields.md) |
-| `variables` | :no_entry_sign: | object | optional | See [Variables](../advanced/config-templates.md#variables) |
+| `variables` | :no_entry_sign: | object | optional | See [Variables](../advanced/js-templates.md#variables) |
 | `card_size` | :no_entry_sign: | number | 3 | Any number | Configure the card size seen by the auto layout feature of lovelace (lovelace will multiply the value by about 50px) |
 | `tooltip` | [:white_check_mark:](../advanced/js-templates.md) | string or object | optional | See [Tooltips](./tooltip.md) | Display a tooltip. (Not supported on touchscreens). |
 | `hidden` | [:white_check_mark:](../advanced/js-templates.md) | boolean | optional | `false` | Shows or hides the card. Supports templates. |
