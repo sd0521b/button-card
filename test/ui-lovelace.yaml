@@ -330,6 +330,26 @@ button_card_templates:
       - value: test4
         icon: mdi:test
 
+  extraS1:
+    template: extraS2
+    extra_styles: |
+      #name {
+        color: red;
+      }
+  extraS2:
+    extra_styles: |
+      #name {
+        color: blue;
+        font-size: 10px;
+      }
+  extraS3:
+    extra_styles: |
+      [[[
+        return `#name {
+          color: ${entity.state === 'on' ? 'green' : 'purple'};
+        }`;
+      ]]]
+
 views:
   - title: Main
     cards:
@@ -4116,6 +4136,31 @@ views:
             grid_options:
               rows: 2
               columns: 12
+
+  - title: Styling
+    type: sections
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: extra_styles
+          - type: 'custom:button-card'
+            section_mode: true
+            grid_options:
+              rows: 4
+              columns: 12
+            styles:
+              name:
+                - text-align: left
+            template:
+              - extraS1
+              - extraS3
+            entity: switch.skylight
+            name: |
+              [[[
+                return "Should be green when on, purple when off<br/><pre>"
+                +JSON.stringify(this._extraStyles, undefined, 2)+"</pre>";
+              ]]]
 
   # second view
   - title: 2nd
