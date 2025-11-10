@@ -1,3 +1,17 @@
+## [7.0.0-dev.5](https://github.com/custom-cards/button-card/compare/v7.0.0-dev.4...v7.0.0-dev.5) (2025-11-10)
+
+### Features
+
+* **extra_styles:** `extra_styles` is now merged when using config templates instead of being overriden by the last one set ([#1108](https://github.com/custom-cards/button-card/issues/1108)) ([a4d78e1](https://github.com/custom-cards/button-card/commit/a4d78e16f7e9573a728624579739fe4869be0520)), closes [#name](https://github.com/custom-cards/button-card/issues/name) [#name](https://github.com/custom-cards/button-card/issues/name) [#name](https://github.com/custom-cards/button-card/issues/name)
+
+### Bug Fixes
+
+* **variables:** Fixed a type error when a variable is `null` ([#1110](https://github.com/custom-cards/button-card/issues/1110)) ([05f1631](https://github.com/custom-cards/button-card/commit/05f1631d46c9005273dc128cd3ecad04b884c3a7)), closes [#1109](https://github.com/custom-cards/button-card/issues/1109)
+
+### Documentation
+
+* Update variables link ([d6bc9f5](https://github.com/custom-cards/button-card/commit/d6bc9f5ff90feb26ec9aa15cd96920d0b4bfa223))
+
 ## [7.0.0-dev.4](https://github.com/custom-cards/button-card/compare/v7.0.0-dev.3...v7.0.0-dev.4) (2025-11-06)
 
 ### Bug Fixes
