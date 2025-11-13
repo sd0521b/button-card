@@ -1,3 +1,9 @@
+## [7.0.1](https://github.com/custom-cards/button-card/compare/v7.0.0...v7.0.1) (2025-11-13)
+
+### Bug Fixes
+
+* Support older android versions (>= 5) ([#1119](https://github.com/custom-cards/button-card/issues/1119)) ([206c0fb](https://github.com/custom-cards/button-card/commit/206c0fb78321f6be7c63b5bbae6f59ddd7a292b1)), closes [#1118](https://github.com/custom-cards/button-card/issues/1118) [#1116](https://github.com/custom-cards/button-card/issues/1116)
+
 ## [7.0.1-dev.1](https://github.com/custom-cards/button-card/compare/v7.0.0...v7.0.1-dev.1) (2025-11-13)
 
 ### Bug Fixes
